@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Nostos
+GenericName=Move from Windows
+Comment=Bring your files, bookmarks and settings over from a Windows PC
+Exec=nostos
+Icon=system-switch-user
+Terminal=false
+Categories=Utility;System;Qt;
+Keywords=windows;migrate;migration;transfer;onedrive;move;import;
+StartupWMClass=nostos

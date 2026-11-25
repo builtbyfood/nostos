@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!-- Nostos agent 0.2.3 - ui.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nostos - moving to a new computer</title>
+<style>
+  :root { --ink:#1f2933; --dim:#5f6b7a; --line:#d5dbe3; --bg:#f4f6f9; --card:#fff;
+          --accent:#1b6ec2; --ok:#1e7d43; --bad:#b3261e; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e8ecf1; --dim:#9aa7b6; --line:#3a4350; --bg:#171b21; --card:#20262e;
+            --accent:#5aa7ee; --ok:#5fca8a; --bad:#ff8a80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font: 17px/1.5 "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 28px 20px 60px; }
+  h1 { font-size: 28px; margin: 0 0 4px; }
+  h2 { font-size: 19px; margin: 0 0 10px; }
+  p { margin: 6px 0; }
+  .dim { color: var(--dim); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px;
+          padding:18px 20px; margin:16px 0; }
+  .num { display:inline-block; width:28px; height:28px; border-radius:50%; background:var(--accent);
+         color:#fff; text-align:center; line-height:28px; font-weight:600; margin-right:8px; }
+  input[type=text] { width:100%; font: inherit; padding:10px 12px; border:1px solid var(--line);
+         border-radius:8px; background:var(--bg); color:var(--ink); }
+  #code { font-size: 26px; letter-spacing: 3px; text-transform: uppercase; text-align:center; }
+  label.opt { display:block; padding:10px 12px; border:1px solid var(--line); border-radius:8px;
+         margin:8px 0; cursor:pointer; }
+  label.opt:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  label.opt b { display:inline-block; margin-left:4px; }
+  label.opt span { display:block; margin-left:28px; color:var(--dim); font-size:15px; }
+  button { font: inherit; padding:10px 18px; border-radius:8px; border:1px solid var(--line);
+         background:var(--card); color:var(--ink); cursor:pointer; }
+  button.main { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;
+         font-size:19px; padding:14px 26px; width:100%; }
+  button:disabled { opacity:.5; cursor:default; }
+  .msg { border-left:4px solid var(--accent); background:rgba(27,110,194,.10); padding:10px 14px;
+         border-radius:6px; margin:12px 0; white-space:pre-line; }
+  .msg.bad { border-color:var(--bad); background:rgba(179,38,30,.10); }
+  .msg.ok  { border-color:var(--ok);  background:rgba(30,125,67,.10); }
+  ul.folders { list-style:none; padding:0; margin:8px 0; }
+  ul.folders li { display:flex; justify-content:space-between; align-items:center; gap:8px;
+         padding:6px 10px; border:1px solid var(--line); border-radius:6px; margin:4px 0;
+         word-break:break-all; }
+  #picker { border:1px solid var(--line); border-radius:8px; padding:10px; margin-top:10px; }
+  #picker .here { font-weight:600; word-break:break-all; }
+  #picker .list { max-height:230px; overflow:auto; margin:8px 0; }
+  #picker .list div { padding:6px 8px; border-radius:6px; cursor:pointer; }
+  #picker .list div:hover { background:rgba(127,127,127,.15); }
+  .big { font-size: 22px; font-weight:600; }
+  .hide { display:none; }
+  progress { width:100%; height:14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Moving to a new computer</h1>
+  <p class="dim" id="who">Looking at this PC…</p>
+
+  <div id="setup">
+    <div class="card">
+      <h2><span class="num">1</span>Type the code from the new computer</h2>
+      <p class="dim">On the new computer, open <b>Nostos</b> and choose the first
+        option, <b>“use the Nostos app”</b>. It shows a code like ABCD-EFGH-JKLM.</p>
+      <input type="text" id="code" maxlength="20" autocomplete="off" spellcheck="false"
+             placeholder="ABCD-EFGH-JKLM">
+      <p id="found" class="dim" style="margin-top:10px">Looking for the new computer…</p>
+      <p><a href="#" id="showAddr">Type the address myself</a></p>
+      <input type="text" id="address" class="hide" placeholder="Address shown in Nostos, for example 192.168.1.50">
+    </div>
+
+    <div class="card">
+      <h2><span class="num">2</span>What may be copied?</h2>
+      <p class="dim">Nothing on this PC is changed or deleted. Files are only read.</p>
+      <label class="opt"><input type="radio" name="mode" value="everything" checked>
+        <b>Everything on this PC</b>
+        <span>All drives. On the new computer you still choose what to actually bring over.
+          Needed for games and for folders outside your own.</span></label>
+      <label class="opt"><input type="radio" name="mode" value="mine">
+        <b>Only my own files</b>
+        <span id="mineHint">Your Desktop, Documents, Pictures and so on.</span></label>
+      <label class="opt"><input type="radio" name="mode" value="custom">
+        <b>Only folders I pick</b>
+        <span>Choose exactly which folders the new computer may see.</span></label>
+      <div id="custom" class="hide">
+        <ul class="folders" id="folders"></ul>
+        <div id="picker">
+          <div class="here" id="here">This PC</div>
+          <div class="list" id="dirs"></div>
+          <button id="up">Up one level</button>
+          <button id="add">Add this folder</button>
+        </div>
+      </div>
+      <label class="opt" style="margin-top:14px"><input type="checkbox" id="wifi">
+        <b>Also bring my saved Wi-Fi passwords</b>
+        <span>Windows will ask “Do you want to allow this app to make changes?”. Choose Yes.</span></label>
+    </div>
+
+    <div id="error" class="msg bad hide"></div>
+    <button class="main" id="go">Connect</button>
+  </div>
+
+  <div id="running" class="card hide">
+    <h2 id="runTitle">Connecting…</h2>
+    <p id="runText" class="dim"></p>
+    <p class="big" id="sent"></p>
+    <p class="dim" id="current" style="word-break:break-all"></p>
+    <div id="runMsg" class="msg hide"></div>
+    <p><button id="again" class="hide">Try again</button>
+       <button id="quit" class="hide">Close Nostos on this PC</button></p>
+  </div>
+
+  <p class="dim" id="ver"></p>
+</main>
+<script>
+const token = new URLSearchParams(location.search).get('t');
+const $ = id => document.getElementById(id);
+const api = (path, body) => fetch(path, {
+  method: body ? 'POST' : 'GET',
+  headers: {'X-Nostos-Token': token, 'Content-Type': 'application/json'},
+  body: body ? JSON.stringify(body) : undefined}).then(r => r.json());
+
+let foundAddress = '', folders = [], herePath = '', hereParent = '';
+
+function human(n) {
+  const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+  let i = 0;
+  while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
+  return (i < 2 ? Math.round(n) : n.toFixed(1)) + ' ' + units[i];
+}
+
+$('code').addEventListener('input', e => {
+  const raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+  e.target.value = raw.replace(/(.{4})(?=.)/g, '$1-');
+});
+$('showAddr').onclick = e => { e.preventDefault(); $('address').classList.remove('hide'); $('address').focus(); };
+
+document.querySelectorAll('input[name=mode]').forEach(r => r.onchange = () => {
+  $('custom').classList.toggle('hide', document.querySelector('input[name=mode]:checked').value !== 'custom');
+});
+
+function drawFolders() {
+  $('folders').innerHTML = '';
+  folders.forEach((f, i) => {
+    const li = document.createElement('li');
+    const span = document.createElement('span'); span.textContent = f;
+    const b = document.createElement('button'); b.textContent = 'Remove';
+    b.onclick = () => { folders.splice(i, 1); drawFolders(); };
+    li.append(span, b); $('folders').append(li);
+  });
+}
+function browse(path) {
+  api('/api/browse?path=' + encodeURIComponent(path || '')).then(d => {
+    herePath = d.path; hereParent = d.parent;
+    $('here').textContent = d.path || 'This PC';
+    $('dirs').innerHTML = '';
+    if (d.error) { $('dirs').textContent = d.error; }
+    d.dirs.forEach(x => {
+      const div = document.createElement('div');
+      div.textContent = '📁 ' + x.name;
+      div.onclick = () => browse(x.path);
+      $('dirs').append(div);
+    });
+    $('up').disabled = !d.path;
+    $('add').disabled = !d.path;
+  });
+}
+$('up').onclick = () => browse(hereParent);
+$('add').onclick = () => { if (herePath && !folders.includes(herePath)) { folders.push(herePath); drawFolders(); } };
+
+function discover() {
+  api('/api/discover', {}).then(d => {
+    if (d.found && d.found.length) {
+      foundAddress = d.found[0].address;
+      $('found').textContent = '✔ Found the new computer: ' + d.found[0].name;
+    } else if (!$('setup').classList.contains('hide')) {
+      $('found').textContent = 'Still looking for the new computer… (make sure Nostos is open there)';
+      setTimeout(discover, 3000);
+    }
+  }).catch(() => setTimeout(discover, 3000));
+}
+
+function showError(text) { $('error').textContent = text; $('error').classList.remove('hide'); }
+
+$('go').onclick = () => {
+  $('error').classList.add('hide');
+  const mode = document.querySelector('input[name=mode]:checked').value;
+  if (mode === 'custom' && !folders.length) { showError('Pick at least one folder, then press “Add this folder”.'); return; }
+  $('go').disabled = true;
+  api('/api/connect', {code: $('code').value, address: $('address').value.trim() || foundAddress,
+                       mode, folders, wifi: $('wifi').checked})
+    .then(d => {
+      $('go').disabled = false;
+      if (!d.ok) { showError(d.error); return; }
+      $('setup').classList.add('hide'); $('running').classList.remove('hide');
+    }).catch(() => { $('go').disabled = false; showError('This app has stopped. Start it again.'); });
+};
+$('again').onclick = () => { $('running').classList.add('hide'); $('setup').classList.remove('hide'); discover(); };
+$('quit').onclick = () => api('/api/quit', {}).then(() => {
+  document.querySelector('main').innerHTML = '<h1>Closed</h1><p>You can close this page.</p>'; });
+
+function poll() {
+  api('/api/state').then(s => {
+    $('ver').textContent = 'Nostos app ' + s.version;
+    if (s.ready && s.computer) {
+      $('who').textContent = 'This PC: ' + s.computer + '   ·   signed in as ' + s.user;
+      $('mineHint').textContent = 'Only ' + s.home + ' (Desktop, Documents, Pictures and so on).';
+    }
+    const ses = s.session || {};
+    const msg = $('runMsg');
+    msg.className = 'msg hide';
+    $('again').classList.add('hide'); $('quit').classList.add('hide');
+    if (ses.state === 'connecting') {
+      $('runTitle').textContent = 'Connecting…'; $('runText').textContent = '';
+    } else if (ses.state === 'connected') {
+      $('runTitle').textContent = 'Connected to ' + (ses.peer || 'the new computer');
+      $('runText').textContent = 'Carry on at the new computer: choose what to bring over there. ' +
+        'Leave this PC switched on and plugged in. It will not go to sleep.';
+      $('sent').textContent = ses.bytes ? human(ses.bytes) + ' sent  ·  ' + ses.files.toLocaleString() + ' files' : 'Waiting for the new computer…';
+      $('current').textContent = ses.current || '';
+    } else if (ses.state === 'done') {
+      $('runTitle').textContent = 'Finished';
+      $('runText').textContent = '';
+      $('sent').textContent = human(ses.bytes || 0) + ' sent  ·  ' + (ses.files || 0).toLocaleString() + ' files';
+      $('current').textContent = '';
+      msg.textContent = 'The new computer has what it asked for. Nothing on this PC was changed.';
+      msg.className = 'msg ok'; $('quit').classList.remove('hide'); $('again').classList.remove('hide');
+      $('again').textContent = 'Connect again';
+    } else if (ses.state === 'error') {
+      $('runTitle').textContent = 'Not connected';
+      $('runText').textContent = ''; $('current').textContent = '';
+      msg.textContent = ses.error; msg.className = 'msg bad';
+      $('again').textContent = 'Try again';
+      $('again').classList.remove('hide'); $('quit').classList.remove('hide');
+    }
+  }).catch(() => {}).finally(() => setTimeout(poll, 1000));
+}
+
+browse(''); discover(); poll(); $('code').focus();
+</script>
+</body>
+</html>
