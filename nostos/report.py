@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - report.py
+# Nostos 0.2.4 - report.py
 """Write a plain-English "what happened" page the user can keep."""
 from __future__ import annotations
 

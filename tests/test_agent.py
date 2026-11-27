@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - tests/test_agent.py
+# Nostos 0.2.4 - tests/test_agent.py
 """End-to-end tests of the Windows app link.
 
 The agent is the same Go code that is compiled into NostosAgent.exe, built

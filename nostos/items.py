@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - items.py
+# Nostos 0.2.4 - items.py
 """Everything that is not a plain folder copy: bookmarks, wallpaper,
 Wi-Fi, network drives, programs, printers.
 
@@ -284,13 +284,19 @@ def detect_wifi(prof: WinProfile) -> list[dict]:
 
 
 def apply_wifi(networks: list[dict]) -> list[str]:
+    """Add the Windows PC's saved Wi-Fi networks to NetworkManager.
+
+    Networks with a password join by themselves, as they did on Windows.
+    Open networks (cafes, hotels) are remembered but NOT joined automatically:
+    anyone can put up a network with the same name.
+    """
     if not networks:
         return []
     if not shutil.which("nmcli"):
         return ["Wi-Fi networks were found but NetworkManager is not available."]
     existing = subprocess.run(["nmcli", "-t", "-f", "NAME", "connection", "show"],
                               capture_output=True, text=True).stdout.splitlines()
-    added, skipped, failed = [], [], []
+    added, open_added, skipped, failed = [], [], [], []
     for net in networks:
         ssid, key = net["ssid"], net.get("key") or ""
         auth = (net.get("auth") or "").upper()
@@ -298,19 +304,27 @@ def apply_wifi(networks: list[dict]) -> list[str]:
             skipped.append(ssid)
             continue
         cmd = ["nmcli", "connection", "add", "type", "wifi", "con-name", ssid,
-               "ssid", ssid, "connection.autoconnect", "yes"]
+               "ssid", ssid]
         if key and "WPA3" in auth:
-            cmd += ["wifi-sec.key-mgmt", "sae", "wifi-sec.psk", key]
+            cmd += ["connection.autoconnect", "yes",
+                    "wifi-sec.key-mgmt", "sae", "wifi-sec.psk", key]
         elif key:
-            cmd += ["wifi-sec.key-mgmt", "wpa-psk", "wifi-sec.psk", key]
-        elif auth not in ("", "OPEN"):
+            cmd += ["connection.autoconnect", "yes",
+                    "wifi-sec.key-mgmt", "wpa-psk", "wifi-sec.psk", key]
+        elif auth in ("", "OPEN"):
+            cmd += ["connection.autoconnect", "no"]
+        else:
             failed.append(ssid)   # work/school networks need a sign-in instead
             continue
         ok = subprocess.run(cmd, capture_output=True).returncode == 0
-        (added if ok else failed).append(ssid)
+        (failed if not ok else added if key else open_added).append(ssid)
     notes = []
     if added:
         notes.append("Wi-Fi networks remembered: " + ", ".join(added) + ".")
+    if open_added:
+        notes.append("Open Wi-Fi networks (no password) remembered, but this "
+                     "computer will not join them by itself; pick them from the "
+                     "Wi-Fi list when you want them: " + ", ".join(open_added) + ".")
     if skipped:
         notes.append("Wi-Fi already known here: " + ", ".join(skipped) + ".")
     if failed:
@@ -395,13 +409,17 @@ def suggest_flatpaks(unknown: list[str], limit: int = 30) -> tuple[list[AppMatch
                 capture_output=True, text=True, timeout=15).stdout
         except Exception:
             return None
+        wanted = re.findall(r"[a-z0-9]+", term.lower())
         for line in out.splitlines():
             parts = line.split("\t")
             if len(parts) < 2 or "." not in parts[0]:
                 continue
             app_id, title = parts[0].strip(), parts[1].strip()
-            if words[0] in title.lower().replace(" ", "") or \
-                    words[0] in title.lower():
+            have = re.findall(r"[a-z0-9]+", title.lower())
+            # A one-word name ("Money", "News") matches far too much, so it
+            # must BE the title. Longer names must have every word present.
+            good = have == wanted if len(wanted) == 1 else all(w in have for w in wanted)
+            if good:
                 return AppMatch(name, title, "flatpak", app_id,
                                 "Found by searching Flathub. Check it is the "
                                 "program you mean.", guess=True)

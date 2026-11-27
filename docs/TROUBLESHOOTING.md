@@ -1,6 +1,6 @@
 # Nostos troubleshooting
 
-Version 0.2.3. Find the message you see, or the thing that is happening. For how to use Nostos, see [USER-GUIDE.md](USER-GUIDE.md).
+Version 0.2.4. Find the message you see, or the thing that is happening. For how to use Nostos, see [USER-GUIDE.md](USER-GUIDE.md).
 
 Two things are true whatever went wrong:
 

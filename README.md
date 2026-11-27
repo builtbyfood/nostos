@@ -1,4 +1,4 @@
-# Nostos 0.2.3
+# Nostos 0.2.4
 
 [![CI](https://github.com/builtbyfood/nostos/actions/workflows/ci.yml/badge.svg)](https://github.com/builtbyfood/nostos/actions/workflows/ci.yml)
 
@@ -86,20 +86,24 @@ NostosAgent.exe -find
 | Copy engine: no-overwrite, resume, cancel, free-space check | **Verified** by tests |
 | Windows app link: pairing, wrong code refused, path escape refused, whole move, lost connection, discovery | **Verified** by tests, with the agent built for Linux |
 | Windows app's own page and API (token check, folder picker, connect, status) | **Verified** on the Linux build |
-| `NostosAgent.exe` on real Windows | Opening the browser, PC name and user, pairing, and copying a profile through the link to a Fedora 45 KDE laptop: **verified** on Windows 10 (2026-11-24, copy seen in progress). Steam detection on a real PC, Wi-Fi export, keep-awake over a long run: **unverified** |
+| `NostosAgent.exe` on real Windows | **Verified** on Windows 10 (2026-11-25): opening the browser, inventory of programs and printers, Wi-Fi export, pairing, and staying connected through a complete 117.7 GB copy. Steam detection on a real PC and the "folders I pick" choice: **unverified** |
 | Finding Nostos from Windows (discovery, or typed address) | Connected on a real LAN; which of the two was used is not recorded |
 | SMB reads with `smbprotocol`; connecting to a real Windows 10 PC and counting a 49,290-file profile | **Verified** (test server, and a Fedora 45 KDE laptop on 2026-11-24) |
-| A full copy from real Windows to the end (junctions, OneDrive cloud-only files, locked files) | **Unverified** |
-| Chrome/Firefox bookmark extraction; sidebar files for KDE and GTK | **Verified** in tests for file contents |
+| A full copy from real Windows to the end | **Verified** through the Windows app (2026-11-25): 49,290 files, 117.7 GB, Windows 10 to Fedora 45 KDE, no files failed. That PC had no locked or OneDrive cloud-only files in the copied folders, so those two cases remain **unverified** |
+| Bookmarks | **Verified** in tests, and on the real run (19 bookmarks saved). Putting them straight into an installed Chromium browser: **unverified** |
+| Sidebar entries for KDE and GTK | **Verified** in tests for file contents; **unverified** in a real file manager (the real PC had no mapped drives) |
+| Wallpaper | **Verified** on KDE Plasma (real run). GNOME, Cinnamon, MATE: **unverified** |
+| Wi-Fi import (`nmcli`) | **Verified** on the real run at 0.2.1 (five networks added, one recognised as already known). The 0.2.4 change for open networks is **verified** in tests only |
 | Steam library detection and copy | **Verified** in tests against a made-up library; **unverified** that Steam on Linux adopts the copied games |
-| Flathub suggestions | **Verified** with a stand-in for `flatpak search`; **unverified** against the real command |
-| Program table Flatpak ids | **Unverified** one by one; a wrong id shows up in the report as "could not be installed" |
+| Flathub suggestions | Ran against the real `flatpak search` on the real run and produced poor guesses for one-word names; tightened in 0.2.4, **verified** in tests only |
+| Program table Flatpak ids | Pinta and Flameshot installed on the real run. The rest are **unverified** one by one; a wrong id shows up in the report as "could not be installed" |
 | Window flow | **Verified** offscreen for a drive move and an app-link move; Start, Connect and Copy pages seen under Plasma on Fedora 45 |
 | `install.sh` on Fedora 45 | **Verified** on a Fedora 45 KDE laptop (0.1.0 and 0.2.x) |
-| `install.sh` on Debian/Ubuntu, Arch, openSUSE; GNOME/Cinnamon/MATE wallpaper | **Unverified** |
+| `install.sh` on Debian/Ubuntu, Arch, openSUSE | **Unverified** |
 | `Prepare-Windows.ps1` | Reported to run successfully on Windows 10 (2026-11-24); its clean-up step is **unverified** |
 | CI workflow | Test and window-test steps passed on GitHub (2026-11-24); the build step is fixed but **not yet seen passing** |
-| OneDrive (rclone), Wi-Fi import, Flatpak installs, `packaging/nostos.spec` | **Unverified** |
+| The report | **Verified** on the real run |
+| OneDrive (rclone), `packaging/nostos.spec` | **Unverified** |
 
 ## Roadmap
 

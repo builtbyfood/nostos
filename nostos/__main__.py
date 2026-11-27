@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - __main__.py
+# Nostos 0.2.4 - __main__.py
 import sys
 
 from . import __version__

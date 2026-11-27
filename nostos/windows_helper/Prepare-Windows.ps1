@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - Prepare-Windows.ps1
+# Nostos 0.2.4 - Prepare-Windows.ps1
 # Run on the OLD Windows PC (double-click "Prepare this PC.cmd").
 #
 # What it does:
@@ -12,7 +12,7 @@
 # Nothing in the user's files is changed. Everything it sets up is undone at
 # the end, or any time later with:  Prepare this PC.cmd  -Undo
 #
-# STATUS: UNVERIFIED on real hardware as of 0.2.3 (syntax-checked only).
+# STATUS: UNVERIFIED on real hardware as of 0.2.4 (syntax-checked only).
 
 param(
     [string]$ProfilePath = $env:USERPROFILE,

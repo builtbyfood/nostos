@@ -1,6 +1,6 @@
-# Nostos 0.2.3 - nostos.spec   (UNVERIFIED: not yet built with rpmbuild)
+# Nostos 0.2.4 - nostos.spec   (UNVERIFIED: not yet built with rpmbuild)
 Name:           nostos
-Version:        0.2.3
+Version:        0.2.4
 Release:        1%{?dist}
 Summary:        Move from Windows to Linux: files, bookmarks, Wi-Fi, apps, OneDrive
 License:        Apache-2.0
@@ -31,5 +31,5 @@ install -m 0644 packaging/nostos.desktop %{buildroot}%{_datadir}/applications/no
 %{_datadir}/applications/nostos.desktop
 
 %changelog
-* Tue Nov 24 2026 Travis DeLuca - 0.2.3-1
+* Tue Nov 24 2026 Travis DeLuca - 0.2.4-1
 - Windows app link, Steam libraries, more distributions

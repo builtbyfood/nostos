@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.4 - 2026-11-26
+
+From the report of the first complete real move (Windows 10 to Fedora 45 KDE, 49,290 files, 117.7 GB, no files failed).
+
+- **Programs, one line each.** A program that Windows lists under many names is now reported once: the real report had eleven lines for OpenVPN (its Wiki, HOWTO, Manual Page and so on). Start-menu documentation links, add-ins, "Add a new … adapter" entries and maintenance services are no longer treated as programs.
+- **Less noise in "no Linux match found".** Things that come with Windows or the PC maker (Money, News, Sports, Copilot, PC Health Check, Mobile Plans, Candy Crush and similar) are left out.
+- **Better answers** for Skype, Sway, SatDump and DVD players (Nero, AnyDVD). Snipping Tool now points at the desktop's own screenshot tool instead of installing another one.
+- **App store guesses are stricter.** One-word names such as "Money" or "News" produced wrong guesses; a one-word name must now match the app's title exactly, and longer names must have every word present.
+- **Open Wi-Fi networks are no longer joined automatically.** Networks without a password (cafes, hotels) are remembered but set not to connect by themselves, and the report says so. Networks with a password behave as before.
+- README status table updated with what the real run confirmed.
+
 ## 0.2.3 - 2026-11-24
 
 Housekeeping after the first push to GitHub; no change to how Nostos behaves.

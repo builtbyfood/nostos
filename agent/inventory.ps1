@@ -1,4 +1,4 @@
-# Nostos agent 0.2.3 - inventory.ps1
+# Nostos agent 0.2.4 - inventory.ps1
 # Run by NostosAgent.exe as the logged-in user. Prints one JSON object:
 # programs, mapped network drives, printers, fixed drives, Steam folder.
 # Reads only; changes nothing. Every section is independent: if one cannot

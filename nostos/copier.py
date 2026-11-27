@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - copier.py
+# Nostos 0.2.4 - copier.py
 """Copy engine: count first, then copy; safe to stop and run again.
 
 Rules that keep it safe for a beginner:

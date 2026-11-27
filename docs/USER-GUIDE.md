@@ -1,6 +1,6 @@
 # Nostos user guide
 
-Version 0.2.3. For the person moving from a Windows PC to a Linux computer, and for whoever is helping them.
+Version 0.2.4. For the person moving from a Windows PC to a Linux computer, and for whoever is helping them.
 
 Screenshots show made-up data ("Dana" on "ACER-LAPTOP"). They were taken with the plain default look; on your computer the window follows your desktop's theme, so colours and button shapes will differ. The words are the same.
 
@@ -218,7 +218,7 @@ If you ticked "Keep OneDrive as a folder":
 ### Network drives, Wi-Fi, printers, wallpaper
 
 - **Network drives** are in the side panel of the file manager. The first time you open one it asks for the name and password.
-- **Wi-Fi networks** are remembered; the computer joins them by itself when in range. Work or school networks that need a sign-in are listed in the report to join by hand.
+- **Wi-Fi networks** with a password are remembered; the computer joins them by itself when in range. **Open networks** (cafes, hotels) are remembered too, but the computer will not join those by itself: pick them from the Wi-Fi list when you want them. Work or school networks that need a sign-in are listed in the report to join by hand.
 - **Printers** are not set up by Nostos. Network printers usually appear by themselves in your printer settings; the report lists the ones you had.
 - **Wallpaper** is set for you on KDE, GNOME, Cinnamon and MATE. On other desktops it is saved in Pictures as **Windows wallpaper**.
 

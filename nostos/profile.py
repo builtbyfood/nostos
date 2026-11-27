@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - profile.py
+# Nostos 0.2.4 - profile.py
 """Find Windows user profiles in a source and work out where things live."""
 from __future__ import annotations
 

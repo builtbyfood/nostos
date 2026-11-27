@@ -1,4 +1,4 @@
-// Nostos agent 0.2.3 - ui.go
+// Nostos agent 0.2.4 - ui.go
 // The window. It is a page in the PC's own web browser, served only to this
 // PC (127.0.0.1) and protected by a one-time token, so nothing else on the
 // network or in another browser tab can drive it.

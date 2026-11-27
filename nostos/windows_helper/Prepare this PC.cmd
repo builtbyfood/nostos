@@ -1,5 +1,5 @@
 @echo off
-rem Nostos 0.2.3 - Prepare this PC.cmd
+rem Nostos 0.2.4 - Prepare this PC.cmd
 rem Double-click this on the OLD Windows PC. To undo by hand later:
 rem   "Prepare this PC.cmd" -Undo
 title Nostos helper

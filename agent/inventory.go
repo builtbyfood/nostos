@@ -1,4 +1,4 @@
-// Nostos agent 0.2.3 - inventory.go
+// Nostos agent 0.2.4 - inventory.go
 // What is on this PC: programs, drives, printers, Wi-Fi. Windows only; on
 // other systems (used for testing) it returns an almost empty inventory.
 package main

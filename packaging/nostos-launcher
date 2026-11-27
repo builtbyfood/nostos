@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Nostos 0.2.3 - launcher
+# Nostos 0.2.4 - launcher
 export PYTHONPATH="/opt/nostos${PYTHONPATH:+:$PYTHONPATH}"
 if [[ -x /opt/nostos/venv/bin/python ]]; then
     exec /opt/nostos/venv/bin/python -m nostos "$@"

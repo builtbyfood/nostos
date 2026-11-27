@@ -1,6 +1,6 @@
 # Nostos reference
 
-Version 0.2.3. For the person setting Nostos up, or anyone who wants the details. The walkthrough is in [USER-GUIDE.md](USER-GUIDE.md); problems are in [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
+Version 0.2.4. For the person setting Nostos up, or anyone who wants the details. The walkthrough is in [USER-GUIDE.md](USER-GUIDE.md); problems are in [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 **Contents**
 

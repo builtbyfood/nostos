@@ -1,4 +1,4 @@
-// Nostos agent 0.2.3 - sys_windows.go
+// Nostos agent 0.2.4 - sys_windows.go
 //go:build windows
 
 package main

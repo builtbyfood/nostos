@@ -1,4 +1,4 @@
-// Nostos agent 0.2.3 - sys_other.go
+// Nostos agent 0.2.4 - sys_other.go
 // Stand-ins so the agent also builds on Linux and macOS for testing.
 //go:build !windows
 

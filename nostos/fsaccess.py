@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - fsaccess.py
+# Nostos 0.2.4 - fsaccess.py
 """Read-only file access to the old Windows machine.
 
 Two back ends share one small interface, so everything else in Nostos

@@ -1,4 +1,4 @@
-// Nostos agent 0.2.3 - proto.go
+// Nostos agent 0.2.4 - proto.go
 //
 // The link between this (Windows) app and Nostos on the new computer.
 //

@@ -1,4 +1,4 @@
-// Nostos agent 0.2.3 - main.go
+// Nostos agent 0.2.4 - main.go
 //
 // The small app that runs on the OLD Windows PC. Double-click it, type the
 // code that Nostos shows on the new computer, choose what may be copied.
@@ -22,7 +22,7 @@ import (
 )
 
 // Version is stamped on every build.
-const Version = "0.2.3"
+const Version = "0.2.4"
 
 //go:embed ui.html inventory.ps1
 var assets embed.FS

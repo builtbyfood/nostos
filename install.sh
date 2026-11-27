@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Nostos 0.2.3 - install.sh
+# Nostos 0.2.4 - install.sh
 # Installs Nostos for every user of this computer.
 # Fedora, Debian/Ubuntu/Mint, Arch and openSUSE families are recognised;
 # anything else falls back to a private Python environment.
@@ -9,7 +9,7 @@
 #   ./install.sh --remove   uninstall
 set -uo pipefail
 
-VERSION="0.2.3"
+VERSION="0.2.4"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="/opt/nostos"
 DRY=0

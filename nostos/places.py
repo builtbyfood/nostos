@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - places.py
+# Nostos 0.2.4 - places.py
 """Add network folders to the file manager sidebar.
 
 KDE (Dolphin) and GTK desktops (GNOME Files, Nemo, Thunar, Caja) keep their

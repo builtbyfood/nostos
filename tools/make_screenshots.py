@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - tools/make_screenshots.py
+# Nostos 0.2.4 - tools/make_screenshots.py
 """Regenerate every screenshot used in the documentation.
 
     python3 tools/make_screenshots.py            # writes docs/screenshots/*.png

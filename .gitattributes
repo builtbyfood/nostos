@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - .gitattributes
+# Nostos 0.2.4 - .gitattributes
 # Text files are stored with LF in the repository whatever the committer's OS.
 * text=auto
 

@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - discovery.py
+# Nostos 0.2.4 - discovery.py
 """Find Windows PCs and file servers on the home network.
 
 Windows 10 does not announce itself in a way Linux picks up by default, so

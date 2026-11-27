@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - gui.py
+# Nostos 0.2.4 - gui.py
 """The step-by-step window. One question per page, big buttons, plain words."""
 from __future__ import annotations
 

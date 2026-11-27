@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - ci.yml
+# Nostos 0.2.4 - ci.yml
 # The test steps passed on GitHub on 2026-11-24; the build step then failed on a
 # missing executable bit, which is why it now calls bash explicitly.
 name: CI

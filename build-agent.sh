@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Nostos 0.2.3 - build-agent.sh
+# Nostos 0.2.4 - build-agent.sh
 # Builds the Windows app (NostosAgent.exe) from the Go source in agent/.
 # Go 1.21 or newer is the only requirement; it cross-compiles from Linux.
 #

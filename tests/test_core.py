@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - tests/test_core.py
+# Nostos 0.2.4 - tests/test_core.py
 """Engine tests against a fake Windows profile.
 
 Run with:  python3 -m pytest tests -q
@@ -277,7 +277,7 @@ def test_gtk_and_kde_sidebars(home, monkeypatch):
 
 
 def test_one_broken_part_does_not_block_the_page(home, windows, monkeypatch):
-    """0.2.3 on Python 3.15 failed the whole page when the app-store search broke."""
+    """0.2.4 on Python 3.15 failed the whole page when the app-store search broke."""
     from nostos import items, log_path
 
     def boom(unknown):
@@ -289,6 +289,70 @@ def test_one_broken_part_does_not_block_the_page(home, windows, monkeypatch):
     assert len(found.problems) == 1 and "app store search" in found.problems[0]
     assert found.bookmarks and found.wallpaper and found.apps and found.unknown_apps
     assert "lazy_import" in log_path().read_text()
+
+
+def test_program_list_from_a_real_pc():
+    """Names as a real Windows 10 PC reported them (first real run, 0.2.1)."""
+    apps, unknown = match_apps([
+        "OpenVPN 2.6.14-I001 amd64", "OpenVPN GUI", "OpenVPN HOWTO", "OpenVPN Wiki",
+        "OpenVPN Web Site", "OpenVPN Support", "OpenVPN Manual Page",
+        "OpenVPN Windows Notes", "OpenVPN Configuration File Directory",
+        "OpenVPN Log File Directory", "OpenVPN Sample Configuration Files",
+        "Add a new TAP-Windows6 virtual network adapter", "WireGuard",
+        "Microsoft Teams Meeting Add-in for Microsoft Office", "Mozilla Maintenance Service",
+        "Money", "News", "Sports", "Copilot", "OneDrive", "PC Health Check", "ATK Package",
+        "Candy Crush Soda Saga", "3D Builder", "Mobile Plans", "Operator messages",
+        "Snipping Tool", "Paint", "Skype", "Sway", "SatDump", "SatDump SDR Server",
+        "Nero DVD Player", "Any DVD", "bootmod3", "MRVCIPlus Aftermarket J2534 VCI",
+        "Xbox Console Companion", "OneNote for Windows 10"])
+    names = sorted(a.windows for a in apps)
+    assert names.count("OpenVPN GUI") == 1 and not any("Wiki" in n or "HOWTO" in n for n in names)
+    assert "WireGuard" in names                      # not swallowed by OpenVPN
+    assert not any("Teams" in n for n in names)
+    by = {a.windows: a for a in apps}
+    assert by["Snipping Tool"].kind == "builtin" and by["Paint"].id.endswith("Pinta")
+    assert by["Any DVD"].id == "org.videolan.VLC" and "Nero DVD Player" not in by
+    assert by["SatDump"].kind == "none" and "SatDump SDR Server" not in by
+    assert by["Skype"].kind == "none" and by["Sway"].kind == "web"
+    assert unknown == ["bootmod3", "MRVCIPlus Aftermarket J2534 VCI"]
+
+
+def test_one_word_names_need_an_exact_app_store_match(monkeypatch):
+    from nostos import items
+
+    def fake_run(cmd, **kw):
+        class R:
+            returncode = 0
+            stdout = {"Ledger": "org.x.MoneyManager\tLedger Money Manager\n",
+                      "Gramps": "org.gramps_project.Gramps\tGramps\n",
+                      "Family Tree Maker": "org.x.FTM\tFamily Tree Maker Viewer\n"}.get(cmd[-1], "")
+        return R
+    monkeypatch.setattr(items.shutil, "which", lambda name: "/usr/bin/" + name)
+    monkeypatch.setattr(items.subprocess, "run", fake_run)
+    guesses, still = items.suggest_flatpaks(["Ledger", "Gramps", "Family Tree Maker 2019"])
+    assert sorted(g.windows for g in guesses) == ["Family Tree Maker 2019", "Gramps"]
+    assert still == ["Ledger"]
+
+
+def test_open_wifi_is_not_joined_automatically(monkeypatch):
+    from nostos import items
+    calls = []
+
+    def fake_run(cmd, **kw):
+        calls.append(cmd)
+
+        class R:
+            returncode = 0
+            stdout = ""
+        return R
+    monkeypatch.setattr(items.shutil, "which", lambda name: "/usr/bin/" + name)
+    monkeypatch.setattr(items.subprocess, "run", fake_run)
+    notes = items.apply_wifi([{"ssid": "HomeNet", "auth": "WPA2PSK", "key": "secret"},
+                              {"ssid": "Cafe Guest", "auth": "open", "key": ""}])
+    adds = {c[c.index("ssid") + 1]: c for c in calls if "add" in c}
+    assert adds["HomeNet"][adds["HomeNet"].index("connection.autoconnect") + 1] == "yes"
+    assert adds["Cafe Guest"][adds["Cafe Guest"].index("connection.autoconnect") + 1] == "no"
+    assert any("will not join them by itself" in n and "Cafe Guest" in n for n in notes)
 
 
 def test_app_matching():

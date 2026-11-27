@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - agentlink.py
+# Nostos 0.2.4 - agentlink.py
 """The link to the Nostos app running on the Windows PC.
 
 Nostos (this side) waits; the Windows app dials in. That way Windows needs

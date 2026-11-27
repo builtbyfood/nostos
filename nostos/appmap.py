@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - appmap.py
+# Nostos 0.2.4 - appmap.py
 """Windows program -> what to use on Fedora KDE.
 
 kind:
@@ -105,7 +105,9 @@ _T = [
     (r"\bkodi\b", "Kodi", "flatpak", "tv.kodi.Kodi", ""),
     (r"musicbee|foobar2000|winamp|aimp|mediamonkey", "Strawberry", "flatpak",
      "org.strawberrymusicplayer.strawberry", "A music library player."),
-    (r"sharex|greenshot|lightshot|snagit|snipping", "Flameshot", "flatpak",
+    (r"snipping tool|snip & sketch", "your desktop's screenshot tool", "builtin", "",
+     "Press the Print Screen key."),
+    (r"sharex|greenshot|lightshot|snagit", "Flameshot", "flatpak",
      "org.flameshot.Flameshot", "Your desktop also has a built-in screenshot tool (Print Screen key)."),
     (r"davinci resolve", "DaVinci Resolve", "none", "",
      "Has a Linux version; download it from Blackmagic Design."),
@@ -146,6 +148,13 @@ _T = [
     # --- not needed on Linux
     (r"mcafee|norton|avast|\bavg\b|malwarebytes|kaspersky|bitdefender|ccleaner|driver booster",
      "", "none", "", "Not needed on Linux."),
+    (r"nero|any ?dvd|powerdvd|windvd", "VLC", "flatpak", "org.videolan.VLC",
+     "VLC plays DVDs and most video files."),
+    (r"satdump", "", "none", "",
+     "SatDump has a Linux version; get it from its own website."),
+    (r"\bskype\b", "", "none", "",
+     "Skype has been retired by Microsoft. Use Teams, or another chat program."),
+    (r"\bsway\b", "Sway on the web", "web", "https://sway.cloud.microsoft", ""),
     (r"quicken|turbotax|quickbooks", "", "none", "",
      "No Linux version. Use the company's website version."),
     (r"cricut|silhouette studio", "", "none", "",
@@ -179,15 +188,45 @@ IGNORE = re.compile(
     r"print management|windows security|microsoft edge|office)$", re.I)
 
 
+# Start-menu entries and components that are part of some other program and
+# must never be treated as a program of their own. Checked BEFORE the table,
+# so "OpenVPN Wiki" or "Teams Meeting Add-in" do not count as OpenVPN or Teams.
+NOT_A_PROGRAM = re.compile(
+    r"add-in\b|\bplug-?in\b|maintenance service|^add a new .* adapter$|"
+    r"\b(howto|manual page|web ?site|wiki|support|windows notes|release notes|"
+    r"documentation|readme|license|changelog)$|"
+    r"\b(file|log|configuration)( file)? directory$|sample configuration files$|"
+    r"^uninstall\b", re.I)
+
+# Things that come with Windows or the PC maker and have nothing to move.
+WINDOWS_EXTRAS = re.compile(
+    r"^(money|news|sports|copilot|onedrive|microsoft wi-fi|mobile plans|"
+    r"operator messages|pc health check|3d builder|atk package|"
+    r"candy crush.*|microsoft (news|to do|whiteboard|family|clipchamp)|"
+    r"get started|tips|cortana|your phone|phone link|power automate|"
+    r"quick assist|dev home|outlook \(new\))$", re.I)
+
+
 def match_apps(names: list[str]) -> tuple[list[AppMatch], list[str]]:
-    """Return (recognised apps, names Nostos does not know)."""
-    matched: dict[str, AppMatch] = {}
+    """Return (recognised apps, names Nostos does not know).
+
+    One line per program: a program that shows up under several names
+    ("OpenVPN GUI", "OpenVPN 2.6.14") is reported once, under its shortest name.
+    """
+    matched: dict[object, AppMatch] = {}
     unknown: list[str] = []
     for raw in sorted({n.strip() for n in names if n and n.strip()}, key=str.lower):
-        for rx, linux, kind, ident, note in TABLE:
-            if rx.search(raw):
-                key = ident or linux or raw
-                matched.setdefault(key, AppMatch(raw, linux, kind, ident, note))
+        if NOT_A_PROGRAM.search(raw) or WINDOWS_EXTRAS.search(raw):
+            continue
+        for row, (rx, linux, kind, ident, note) in enumerate(TABLE):
+            hit = rx.search(raw)
+            if hit:
+                # Same replacement program -> one "Install" line. Otherwise one
+                # line per distinct thing the pattern caught.
+                key = ident if kind == "flatpak" else (row, hit.group(0).lower())
+                old = matched.get(key)
+                if old is None or len(raw) < len(old.windows):
+                    matched[key] = AppMatch(raw, linux, kind, ident, note)
                 break
         else:
             if not IGNORE.search(raw):

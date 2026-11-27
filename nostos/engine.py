@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - engine.py
+# Nostos 0.2.4 - engine.py
 """Ties everything together. No GUI code here, so it can be tested alone."""
 from __future__ import annotations
 

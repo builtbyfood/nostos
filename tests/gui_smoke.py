@@ -1,4 +1,4 @@
-# Nostos 0.2.3 - tests/gui_smoke.py
+# Nostos 0.2.4 - tests/gui_smoke.py
 """Drive the real window through whole moves without a screen.
 
   QT_QPA_PLATFORM=offscreen python3 tests/gui_smoke.py [screenshot-folder]
